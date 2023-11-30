@@ -4,6 +4,14 @@
  */
 package javaswinggui;
 
+import General.ConnectionProvider;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 
 
 /**
@@ -17,6 +25,40 @@ public class login extends javax.swing.JFrame {
      */
     public login() {
         initComponents();
+    }
+    
+    public void showLogin(){
+     try {
+            // Create the SQL query with placeholders
+            String getQuery = "SELECT * FROM user";
+
+
+            // Create a connection
+            ConnectionProvider dbc = new ConnectionProvider();
+            String jdbcDriver = dbc.getJdbcDriver();
+            String dbConnectionURL = dbc.getDbConnectionURL();
+            String dbUsername = dbc.getDbUsername();
+            String dbPassword = dbc.getDbPassword();
+            Class.forName(jdbcDriver);
+            Connection connection = DriverManager.getConnection(dbConnectionURL, dbUsername, dbPassword);
+
+            // Create the PreparedStatement
+            PreparedStatement statement = connection.prepareStatement(getQuery);
+
+            statement.executeQuery();
+           ResultSet resultSet = statement.executeQuery();
+           
+            // Close resources
+           resultSet.close();
+           statement.close();
+           connection.close();
+
+            System.out.println("Retrieved Successfully!");
+
+        } catch (ClassNotFoundException | SQLException e) {
+          JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          e.printStackTrace();
+        }
     }
 
     /**
@@ -40,6 +82,8 @@ public class login extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         tfpassword = new javax.swing.JPasswordField();
         Login = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
@@ -51,7 +95,7 @@ public class login extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(800, 500));
         jPanel1.setLayout(null);
 
-        Right.setBackground(new java.awt.Color(135, 206, 235));
+        Right.setBackground(new java.awt.Color(255, 204, 153));
         Right.setPreferredSize(new java.awt.Dimension(400, 500));
         Right.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         Right.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(159, 2466, 37, -1));
@@ -71,12 +115,12 @@ public class login extends javax.swing.JFrame {
         Left.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(135, 206, 235));
+        jLabel1.setForeground(new java.awt.Color(255, 102, 0));
         jLabel1.setText("LOGIN");
         Left.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(138, 56, 119, 60));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel2.setText("Username:");
+        jLabel2.setText("Username");
         Left.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 79, -1));
 
         tfusername.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -101,7 +145,7 @@ public class login extends javax.swing.JFrame {
         });
         Left.add(tfpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 261, 325, 35));
 
-        Login.setBackground(new java.awt.Color(135, 206, 235));
+        Login.setBackground(new java.awt.Color(255, 102, 0));
         Login.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Login.setForeground(new java.awt.Color(255, 255, 255));
         Login.setText("Login");
@@ -114,7 +158,15 @@ public class login extends javax.swing.JFrame {
         Left.add(Login, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 100, 33));
 
         jPanel1.add(Left);
-        Left.setBounds(400, 0, 410, 500);
+        Left.setBounds(400, 0, 410, 353);
+
+        jLabel7.setText("already have an account ?");
+        jPanel1.add(jLabel7);
+        jLabel7.setBounds(420, 390, 140, 16);
+
+        jButton1.setText("sign in");
+        jPanel1.add(jButton1);
+        jButton1.setBounds(570, 390, 75, 23);
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 794, -1));
 
@@ -135,24 +187,53 @@ public class login extends javax.swing.JFrame {
         // TODO add your handling code here:
         
        try {
-    // Assuming tfusername and tfpassword are JTextField components
-       String username = tfusername.getText();
-       String password = tfpassword.getText();
-    
-    if (username.equals("admin") && password.equals("123")) {
-        HomePage home = new HomePage();
-        home.setVisible(true);
-        home.pack();
-        home.setLocationRelativeTo(null);
-        this.dispose();
-    } else {
-        System.out.println("Incorrect username or password");
+    // Create the SQL query with placeholders
+    String getQuery = "SELECT username, password FROM user WHERE username = ? AND password = ?";
+
+    // Create a connection
+    ConnectionProvider dbc = new ConnectionProvider();
+    String jdbcDriver = dbc.getJdbcDriver();
+    String dbConnectionURL = dbc.getDbConnectionURL();
+    String dbUsername = dbc.getDbUsername();
+    String dbPassword = dbc.getDbPassword();
+
+    Class.forName(jdbcDriver);
+    Connection connection = DriverManager.getConnection(dbConnectionURL, dbUsername, dbPassword);
+
+    // Create the PreparedStatement
+    try (PreparedStatement statement = connection.prepareStatement(getQuery)) {
+        // Set values for the placeholders
+        statement.setString(1, tfusername.getText());
+        statement.setString(2, tfpassword.getText());
+         
+        // Execute the query and get the result set
+        try (ResultSet resultSet = statement.executeQuery()) {
+            // Process the result set
+            if (resultSet.next()) {
+                 HomePage home = new HomePage();
+                 home.setVisible(true);
+                 home.pack();
+                 home.setLocationRelativeTo(null);
+                 this.dispose();
+                // User found, you can do something here
+                System.out.println("User retrieved successfully");
+            } else {
+                // User not found
+                System.out.println("User not found");
+            }
+        }
+       
     }
-} catch (Exception e) {
-    // Handle specific exceptions as needed
-    System.out.println("An error occurred: " + e.getMessage());
+
+    // Close the connection
+    connection.close();
+    showLogin();
+    System.out.println("Retrieved Successfully!");
+
+} catch (ClassNotFoundException | SQLException e) {
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
 }
-     
   
    
     }//GEN-LAST:event_LoginActionPerformed
@@ -166,12 +247,14 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JPanel Left;
     private javax.swing.JButton Login;
     private javax.swing.JPanel Right;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField tfpassword;
     private javax.swing.JTextField tfusername;

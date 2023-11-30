@@ -43,7 +43,6 @@ public class HomePage extends javax.swing.JFrame {
         jLabel1.setText("HOMEPAGE");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, -1, -1));
 
-        btnSB.setIcon(new javax.swing.ImageIcon("C:\\Users\\jetro\\Downloads\\1__1_-removebg-preview (1).png")); // NOI18N
         btnSB.setDefaultCapable(false);
         btnSB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -52,7 +51,6 @@ public class HomePage extends javax.swing.JFrame {
         });
         getContentPane().add(btnSB, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, 175, 168));
 
-        btnSR.setIcon(new javax.swing.ImageIcon("C:\\Users\\jetro\\Downloads\\2 (2).png")); // NOI18N
         btnSR.setMaximumSize(new java.awt.Dimension(238, 239));
         btnSR.setMinimumSize(new java.awt.Dimension(238, 239));
         btnSR.addActionListener(new java.awt.event.ActionListener() {

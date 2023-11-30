@@ -4,22 +4,35 @@
  */
 package General;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author jetro
  */
 public class ConnectionProvider {
     
-    public static Connection connect(){
-        Connection con;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_document_tracker","root","");
-            return con;
-        } catch (Exception ex) {
-            return null;
-        }
+ 
+       private final String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+       private final String dbConnectionURL = "jdbc:mysql://localhost:3306/student_document_tracker";
+       private final String dbUsername = "root";
+       private final String dbPassword = "";
+
+    
+        
+    
+    public String getJdbcDriver() {
+        return jdbcDriver;
+    }
+
+    public String getDbConnectionURL() {
+        return dbConnectionURL;
+    }
+
+    public String getDbUsername() {
+        return dbUsername;
+    }
+
+    public String getDbPassword() {
+        return dbPassword;
     }
 }
+    

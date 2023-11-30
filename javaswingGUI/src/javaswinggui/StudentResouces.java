@@ -2,20 +2,109 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package javaswinggui;
 
+
+package javaswinggui;
+import General.ConnectionProvider;
+import java.sql.*;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author jetro
  */
 public class StudentResouces extends javax.swing.JFrame {
+      private String studentId;
+      private String goodMoral;
+      private String reportCard;
+      private String birthCertificate;
+      private String medicalCertificate;
+      private String form137;
+      private String deploma;
 
     /**
      * Creates new form StudentResouces
      */
     public StudentResouces() {
+        
         initComponents();
+        showStudentResources();
     }
+    
+    public void showStudentResources(){
+      try {
+    // Create the SQL query with placeholders
+    String getQuery = "SELECT * FROM student_resources";
+
+    // Create a connection
+    ConnectionProvider dbc = new ConnectionProvider();
+    String jdbcDriver = dbc.getJdbcDriver();
+    String dbConnectionURL = dbc.getDbConnectionURL();
+    String dbUsername = dbc.getDbUsername();
+    String dbPassword = dbc.getDbPassword();
+    Class.forName(jdbcDriver);
+    Connection connection = DriverManager.getConnection(dbConnectionURL, dbUsername, dbPassword);
+    JOptionPane.showMessageDialog(this, "Retrieve successfully");
+
+    // Create the PreparedStatement
+    PreparedStatement statement = connection.prepareStatement(getQuery);
+    ResultSet resultSet = statement.executeQuery();
+
+    // Create a table model to store data
+    DefaultTableModel tableModel = new DefaultTableModel();
+    
+     // Override isCellEditable method to make all cells non-editable
+            tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    // Make all cells non-editable
+                    return false;
+                }
+            };
+            // Set the row height
+            int rowHeight = 30; // Set your desired row height
+            this.jTable1.setRowHeight(rowHeight);
+
+    // Get column names and add them to the table model
+    ResultSetMetaData metaData = resultSet.getMetaData();
+    int columnCount = metaData.getColumnCount();
+    for (int i = 1; i <= columnCount; i++) {
+        String columnName = metaData.getColumnName(i);
+        if (columnName.equals("student_id") || columnName.equals("good_moral") ||
+                columnName.equals("report_card") || columnName.equals("birth_certificate") || columnName.equals("medical_certificate")
+                || columnName.equals("form137") || columnName.equals("deploma")) {
+            columnName = columnName.toUpperCase();
+            tableModel.addColumn(columnName);
+        }
+    }
+
+    // Add rows to the table model
+    while (resultSet.next()) {
+        Object[] rowData = new Object[columnCount];
+        for (int i = 1; i <= columnCount; i++) {
+            rowData[i - 1] = resultSet.getObject(i);
+        }
+        tableModel.addRow(rowData);
+    }
+
+    // Set the table model to the JTable
+    jTable1.setModel(tableModel);
+
+    // Close resources
+    resultSet.close();
+    statement.close();
+    connection.close();
+
+    System.out.println("Retrieved Successfully!");
+
+} catch (ClassNotFoundException | SQLException e) {
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
+}
+    }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,148 +116,437 @@ public class StudentResouces extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        birth_certificate_combo_box = new javax.swing.JComboBox<>();
+        good_moral_combo_box = new javax.swing.JComboBox<>();
+        medical_certificate_combo_box = new javax.swing.JComboBox<>();
+        report_card_combo_box = new javax.swing.JComboBox<>();
+        form137_combo_box = new javax.swing.JComboBox<>();
+        deploma_combo_box = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jLabel4 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        student_id_field = new javax.swing.JTextField();
+        search = new javax.swing.JButton();
+        searchTF = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
+        setMinimumSize(new java.awt.Dimension(960, 740));
         setPreferredSize(new java.awt.Dimension(800, 500));
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel1.setBackground(new java.awt.Color(0, 0, 51));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton3.setBackground(new java.awt.Color(102, 204, 255));
-        jButton3.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("BIRTH CERTIFICATE");
-        jButton3.setBorderPainted(false);
+        jPanel2.setBackground(new java.awt.Color(255, 102, 0));
+        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jButton1.setBackground(new java.awt.Color(102, 204, 255));
-        jButton1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("SHS REPORTCARD");
-        jButton1.setBorderPainted(false);
+        jLabel1.setFont(new java.awt.Font("Calibri", 1, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("STUDENT RESOURCES");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(276, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(171, 171, 171))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(27, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
+        );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 920, 100));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("GOOD MORAL");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("REPORT CARD");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 210, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("NSO");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 250, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("X-RAY");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, -1, -1));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("FORM 137");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 330, -1, -1));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("DEPLOMA");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 370, -1, -1));
+
+        birth_certificate_combo_box.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        birth_certificate_combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TRUE", "FALSE" }));
+        jPanel1.add(birth_certificate_combo_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 250, 320, 30));
+
+        good_moral_combo_box.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        good_moral_combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TRUE", "FALSE" }));
+        jPanel1.add(good_moral_combo_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 170, 320, 30));
+
+        medical_certificate_combo_box.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        medical_certificate_combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TRUE", "FALSE" }));
+        jPanel1.add(medical_certificate_combo_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 320, 30));
+
+        report_card_combo_box.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        report_card_combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TRUE", "FALSE" }));
+        jPanel1.add(report_card_combo_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 210, 320, 30));
+
+        form137_combo_box.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        form137_combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TRUE", "FALSE" }));
+        jPanel1.add(form137_combo_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 330, 320, 30));
+
+        deploma_combo_box.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        deploma_combo_box.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TRUE", "FALSE" }));
+        jPanel1.add(deploma_combo_box, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 370, 320, 30));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "student_id", "good_moral", "report_card", "nso", "x-ray", "form 137", "deploma"
+            }
+        ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 460, 820, 210));
+
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton1.setText("SAVE");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 150, 120, 40));
 
-        jButton2.setBackground(new java.awt.Color(102, 204, 255));
-        jButton2.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("GOOD MORAL");
-        jButton2.setBorderPainted(false);
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton2.setText("BACK");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 330, 120, 40));
 
-        jLabel1.setFont(new java.awt.Font("Calibri", 1, 48)); // NOI18N
-        jLabel1.setText("TALISAY CITY COLLEGE");
-
-        jTable1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
-        jTable1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"Birth Certificate", "True", ""},
-                {"Form 138", "True", null},
-                {"Good Moral", "", "True"}
-            },
-            new String [] {
-                "Requirements", "Submitted", "Not_Submitted"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton3.setText("RESET");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
-        jTable1.setColumnSelectionAllowed(true);
-        jTable1.setShowGrid(true);
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 270, 120, 40));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jButton3)
-                        .addGap(40, 40, 40)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(178, 178, 178)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(122, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
-        );
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jButton4.setText("UPDATE");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 210, 120, 40));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\jetro\\Downloads\\tcc900.png")); // NOI18N
-        jLabel4.setText(".");
-        jLabel4.setMaximumSize(new java.awt.Dimension(500, 200));
-        jLabel4.setMinimumSize(new java.awt.Dimension(500, 200));
-        jLabel4.setPreferredSize(new java.awt.Dimension(500, 200));
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("STUDENT_ID");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 136, 100, 20));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
-        );
+        student_id_field.setBorder(null);
+        jPanel1.add(student_id_field, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 132, 320, 30));
+
+        search.setBackground(new java.awt.Color(255, 102, 0));
+        search.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        search.setForeground(new java.awt.Color(255, 255, 255));
+        search.setText("SEARCH");
+        search.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchActionPerformed(evt);
+            }
+        });
+        jPanel1.add(search, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, 100, 30));
+
+        searchTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchTFActionPerformed(evt);
+            }
+        });
+        jPanel1.add(searchTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 410, 320, 30));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 920, 700));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+   // Assuming student_id_field represents a string student ID
+  try {
+    // Create the SQL query with placeholders
+    String insertQuery = "INSERT INTO student_resources (student_id, good_moral, report_card, birth_certificate, medical_certificate, form137, deploma) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    // Create a connection
+    ConnectionProvider dbc = new ConnectionProvider();
+    String jdbcDriver = dbc.getJdbcDriver();
+    String dbConnectionURL = dbc.getDbConnectionURL();
+    String dbUsername = dbc.getDbUsername();
+    String dbPassword = dbc.getDbPassword();
+    Class.forName(jdbcDriver);
+    Connection connection = DriverManager.getConnection(dbConnectionURL, dbUsername, dbPassword);
+
+    // Create the PreparedStatement
+    PreparedStatement statement = connection.prepareStatement(insertQuery);
+
+    // Assuming student_id_field represents a string student ID
+    statement.setString(1, student_id_field.getText());
+    statement.setString(2, String.valueOf(good_moral_combo_box.getSelectedItem()));
+    statement.setString(3, String.valueOf(report_card_combo_box.getSelectedItem()));
+    statement.setString(4, String.valueOf(birth_certificate_combo_box.getSelectedItem()));
+    statement.setString(5, String.valueOf(medical_certificate_combo_box.getSelectedItem()));
+    statement.setString(6, String.valueOf(form137_combo_box.getSelectedItem()));
+    statement.setString(7, String.valueOf(deploma_combo_box.getSelectedItem()));
+
+    statement.executeUpdate();
+
+    // Clear the input fields
+    this.student_id_field.setText("");
+    this.good_moral_combo_box.setSelectedItem("TRUE");
+    this.report_card_combo_box.setSelectedItem("TRUE");
+    this.birth_certificate_combo_box.setSelectedItem("TRUE");
+    this.medical_certificate_combo_box.setSelectedItem("TRUE");
+    this.form137_combo_box.setSelectedItem("TRUE");
+    this.deploma_combo_box.setSelectedItem("TRUE");
+
+    DefaultTableModel tableModel = new DefaultTableModel();
+    jTable1.setModel(tableModel);
+    showStudentResources();
+
+    System.out.println("Add Successfully!");
+
+} catch (ClassNotFoundException | SQLException e) {
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
+}
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+         // TODO add your handling code here:
+        HomePage home = new HomePage();
+        home.setVisible(true);
+        home.pack();
+        home.setLocationRelativeTo(null);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    DefaultTableModel RecordTable = (DefaultTableModel) jTable1.getModel();
+    int SelectedRows = jTable1.getSelectedRow();
+    student_id_field.setText(RecordTable.getValueAt(SelectedRows, 0).toString());
+    good_moral_combo_box.setSelectedItem(RecordTable.getValueAt(SelectedRows, 1).toString());
+    report_card_combo_box.setSelectedItem(RecordTable.getValueAt(SelectedRows, 2).toString());
+    birth_certificate_combo_box.setSelectedItem(RecordTable.getValueAt(SelectedRows, 3).toString());
+    medical_certificate_combo_box.setSelectedItem(RecordTable.getValueAt(SelectedRows, 4).toString());
+    form137_combo_box.setSelectedItem(RecordTable.getValueAt(SelectedRows, 5).toString());
+    deploma_combo_box.setSelectedItem(RecordTable.getValueAt(SelectedRows, 6).toString());
+    
+        
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+                this.student_id_field.setText("");
+                this.good_moral_combo_box.setSelectedItem("TRUE");
+                this.report_card_combo_box.setSelectedItem("TRUE");
+                this.birth_certificate_combo_box.setSelectedItem("TRUE");
+                this.medical_certificate_combo_box.setSelectedItem("TRUE");
+                this.form137_combo_box.setSelectedItem("TRUE");
+                this.deploma_combo_box.setSelectedItem("TRUE");
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+           try {
+    // Create the SQL query for update
+    String updateQuery = "UPDATE student_resources SET good_moral='" + good_moral_combo_box.getSelectedItem() +
+            "',report_card='" + report_card_combo_box.getSelectedItem() +
+            "', birth_certificate='" + birth_certificate_combo_box.getSelectedItem() +
+            "', medical_certificate='" + medical_certificate_combo_box.getSelectedItem() +
+            "', form137='" + form137_combo_box.getSelectedItem() +
+            "', deploma='" + deploma_combo_box.getSelectedItem() +
+            "' WHERE student_id='" + student_id_field.getText() + "'";
+
+    // Create a connection
+    ConnectionProvider dbc = new ConnectionProvider();
+    String jdbcDriver = dbc.getJdbcDriver();
+    String dbConnectionURL = dbc.getDbConnectionURL();
+    String dbUsername = dbc.getDbUsername();
+    String dbPassword = dbc.getDbPassword();
+    Class.forName(jdbcDriver);
+    Connection connection = DriverManager.getConnection(dbConnectionURL, dbUsername, dbPassword);
+
+    // Create the Statement
+    Statement statement = connection.createStatement();
+
+    // Execute the UPDATE query
+    int rowsAffected = statement.executeUpdate(updateQuery);
+
+    if (rowsAffected > 0) {
+        // Clear the input fields
+        this.student_id_field.setText("");
+        this.good_moral_combo_box.setSelectedItem("");
+        this.report_card_combo_box.setSelectedItem("");
+        this.birth_certificate_combo_box.setSelectedItem("");
+        this.medical_certificate_combo_box.setSelectedItem("");
+        this.form137_combo_box.setSelectedItem("");
+        this.deploma_combo_box.setSelectedItem("");
+
+        JOptionPane.showMessageDialog(this, "Record has been successfully updated");
+    } else {
+        JOptionPane.showMessageDialog(this, "No record found with the given student_id.");
+    }
+
+    // Refresh the table with updated data
+    DefaultTableModel tableModel = new DefaultTableModel();
+    jTable1.setModel(tableModel);
+    showStudentResources();
+
+    System.out.println("Update Successfully!");
+
+} catch (ClassNotFoundException | SQLException e) {
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
+}
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        // TODO add your handling code here:
+        
+              // TODO add your handling code here:
+    try {
+    // Create the SQL query with placeholders
+    String searchQuery = "SELECT * FROM student_resources WHERE student_id  LIKE ? OR 	good_moral LIKE ? OR report_card LIKE ? OR birth_certificate LIKE ? OR medical_certificate LIKE ? OR form137 LIKE ? OR deploma LIKE ?";
+    
+    // Create a connection
+    ConnectionProvider dbc = new ConnectionProvider();
+    String jdbcDriver = dbc.getJdbcDriver();
+    String dbConnectionURL = dbc.getDbConnectionURL();
+    String dbUsername = dbc.getDbUsername();
+    String dbPassword = dbc.getDbPassword();
+    Class.forName(jdbcDriver);
+    Connection connection = DriverManager.getConnection(dbConnectionURL, dbUsername, dbPassword);
+    
+    // Create the PreparedStatement
+    PreparedStatement statement = connection.prepareStatement(searchQuery);
+    
+    // Set search parameters
+    String searchKeyword = "%" + searchTF.getText() + "%";
+    for (int i = 1; i <= 7; i++) {
+        statement.setString(i, searchKeyword);
+    }
+    
+    // Execute the query
+    ResultSet resultSet = statement.executeQuery();
+    
+    // Process the result set as needed
+    if (resultSet.next()) {
+        this.studentId = resultSet.getString("student_id");
+        this.goodMoral = resultSet.getString("good_moral");
+        this.reportCard = resultSet.getString("report_card");
+        this.birthCertificate = resultSet.getString("birth_certificate");
+        this.medicalCertificate = resultSet.getString("medical_certificate");
+        this.form137 = resultSet.getString("form137");
+        this.deploma = resultSet.getString("deploma");
+
+        // Display the retrieved data
+        System.out.println("student_id: " + this.studentId);
+        System.out.println("good_moral: " + this.goodMoral);
+        System.out.println("report_card: " + this.reportCard);
+        System.out.println("birth_certificate: " + this.birthCertificate);
+        System.out.println("medical_certificate: " + this.medicalCertificate);
+        System.out.println("form137: " + this.form137);
+        System.out.println("deploma: " + this.deploma);
+
+        // Create a table model to store data
+        DefaultTableModel tableModel = new DefaultTableModel();
+        jTable1.setModel(tableModel);
+
+        // Get column names and add them to the table model
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        for (int i = 1; i <= columnCount; i++) {
+            String columnName = metaData.getColumnName(i);
+            if (columnName.equals("student_id") || columnName.equals("good_moral") ||
+                    columnName.equals("report_card") || columnName.equals("birth_certificate") || columnName.equals("medical_certificate")
+                    || columnName.equals("form137") || columnName.equals("deploma")) {
+                tableModel.addColumn(columnName);
+            }
+        }
+
+        // Add rows to the table model
+        do {
+            Object[] rowData = new Object[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                rowData[i - 1] = resultSet.getObject(i);
+            }
+            tableModel.addRow(rowData);
+        } while (resultSet.next());
+
+    } else {
+        System.out.println("No matching records found.");
+        JOptionPane.showMessageDialog(null, "No record found!");
+    }
+
+    // Close resources
+    resultSet.close();
+    statement.close();
+    connection.close();
+} catch (ClassNotFoundException | SQLException e) {
+    e.printStackTrace();
+}
+    }//GEN-LAST:event_searchActionPerformed
+
+    private void searchTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchTFActionPerformed
 
     /**
      * @param args the command line arguments
@@ -206,13 +584,30 @@ public class StudentResouces extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> birth_certificate_combo_box;
+    private javax.swing.JComboBox<String> deploma_combo_box;
+    private javax.swing.JComboBox<String> form137_combo_box;
+    private javax.swing.JComboBox<String> good_moral_combo_box;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JComboBox<String> medical_certificate_combo_box;
+    private javax.swing.JComboBox<String> report_card_combo_box;
+    private javax.swing.JButton search;
+    private javax.swing.JTextField searchTF;
+    private javax.swing.JTextField student_id_field;
     // End of variables declaration//GEN-END:variables
 }

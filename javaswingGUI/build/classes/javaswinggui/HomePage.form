@@ -49,9 +49,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnSB">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="C:\Users\jetro\Downloads\1__1_-removebg-preview (1).png"/>
-        </Property>
         <Property name="defaultCapable" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -65,9 +62,6 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnSR">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="C:\Users\jetro\Downloads\2 (2).png"/>
-        </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[238, 239]"/>
         </Property>
